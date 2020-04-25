@@ -17,6 +17,7 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
     def initialize(self):
         GPIO.setwarnings(False)  # Disable GPIO warnings
         self.estop_sent = False
+        self.pin_initialized = False
 
     @property
     def pin(self):
@@ -46,7 +47,8 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
         self._setup_button()
 
     def on_settings_save(self, data):
-        GPIO.remove_event_detect(self.pin)
+        if self.sensor_enabled() and self.pin_initialized:
+            GPIO.remove_event_detect(self.pin)
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
         self._setup_button()
 
@@ -54,7 +56,7 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
         if self.sensor_enabled():
             self._logger.info("Setting up button.")
             self._logger.info("Using Board Mode")
-            GPIO.setmode(GPIO.BOARD)
+            GPIO.setmode(GPIO.BCM)
             self._logger.info("Emergency Stop button active on GPIO Pin [%s]" % self.pin)
             if self.switch is 0:
                 GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -63,15 +65,11 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
 
             GPIO.remove_event_detect(self.pin)
             GPIO.add_event_detect(
-                self.pin, GPIO.RISING,
+                self.pin, GPIO.BOTH,
                 callback=self.button_callback,
                 bouncetime=1
             )
-            GPIO.add_event_detect(
-                self.pin, GPIO.FALLING,
-                callback=self.button_callback,
-                bouncetime=1
-            )
+            self.pin_initialized = True
         else:
             self._logger.info("Pin not configured, won't work unless configured!")
 
@@ -83,7 +81,7 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
         return self.pin != -1
 
     def emergency_stop_triggered(self):
-        return GPIO.input(self.pin) != self.switch
+        return self.pin_initialized and self.sensor_enabled() and GPIO.input(self.pin) != self.switch
 
     def on_event(self, event, payload):
         if event is Events.CONNECTED:

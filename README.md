@@ -1,7 +1,5 @@
 # Emergency stop simplified
 
-**:warning:This plugin is untested at the moment (waiting for a print to finish)**
-
 This plugin reacts to a switch or button, if triggered (switch open) it issues **M112** command to printer.
 
 Let's check some features:
