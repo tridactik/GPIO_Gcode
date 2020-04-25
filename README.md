@@ -1,5 +1,7 @@
 # Emergency stop simplified
 
+**:warning:This plugin is untested at the moment (waiting for a print to finish)**
+
 This plugin reacts to short lever microswitch output like [this](https://chinadaier.en.made-in-china.com/product/ABVJkvyMAqcT/China-1A-125VAC-on-off-Kw10-Mini-Micro-Mouse-Switch.html)
 If triggered (switch open) it issues **M112** command to printer.
 
