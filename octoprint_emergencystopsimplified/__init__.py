@@ -8,7 +8,7 @@ from time import sleep
 import RPi.GPIO as GPIO
 
 
-class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
+class GPIO_Gcode_Plugin(octoprint.plugin.StartupPlugin,
                                        octoprint.plugin.EventHandlerPlugin,
                                        octoprint.plugin.TemplatePlugin,
                                        octoprint.plugin.SettingsPlugin,
@@ -40,10 +40,11 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
         return dict(
             pin=-1,  # Default is -1
             switch=0
+					  gcode="M112" # Default is M112, if using TP-Link use M81 [IP Address} 
         )
 
     def on_after_startup(self):
-        self._logger.info("Emergency Stop Simplified started")
+        self._logger.info("GPIO Gcode started")
         self._setup_button()
 
     def on_settings_save(self, data):
@@ -96,7 +97,7 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
                 self._plugin_manager.send_plugin_message(self._identifier, dict(type="info", autoClose=True, msg="You may have forgotten to configure this plugin."))
 
     def button_callback(self, _):
-        self._logger.info("Emergency stop button was triggered")
+        self._logger.info("Emergency stop was triggered")
         if self.emergency_stop_triggered():
             self.send_emergency_stop()
         else:
@@ -107,7 +108,7 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
             return
 
         self._logger.info("Sending emergency stop GCODE")
-        self._printer.commands("M112")
+        self._printer.commands(gcode)
         self.estop_sent = True
 
 
@@ -122,12 +123,12 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
 
                 # version check: github repository
                 type="github_release",
-                user="Mechazawa",
-                repo="Emergency_stop_simplified",
+                user="tridactik",
+                repo="GPIO_Gcode",
                 current=self._plugin_version,
 
                 # update method: pip
-                pip="https://github.com/Mechazawa/Emergency_stop_simplified/archive/{target_version}.zip"
+                pip="https://github.com/tridactick/GPIO_Gcode/archive/{target_version}.zip"
             )
         )
 
@@ -138,7 +139,7 @@ class Emergency_stop_simplifiedPlugin(octoprint.plugin.StartupPlugin,
 # __plugin_pythoncompat__ = ">=3,<4" # only python 3
 __plugin_pythoncompat__ = ">=2.7,<4"  # python 2 and 3
 
-__plugin_name__ = "Emergency Stop Simplified"
+__plugin_name__ = "GPIO Gcode"
 __plugin_version__ = "0.1.1"
 
 def __plugin_check__():
@@ -152,7 +153,7 @@ def __plugin_check__():
 
 def __plugin_load__():
     global __plugin_implementation__
-    __plugin_implementation__ = Emergency_stop_simplifiedPlugin()
+    __plugin_implementation__ = GPIO_Gcode_Plugin()
 
     global __plugin_hooks__
     __plugin_hooks__ = {
