@@ -12,6 +12,16 @@
     </div>
     <div class="control-group">
         <div class="marginBot">
+            <b>What G-Code will run on GPIO trigger?</b>
+        </div>
+        <label class="control-label">{{ _('G-Code:') }}</label>
+        <div class="controls" data-toggle="tooltip">
+            <input type="number" step="any" min="0" class="input-mini text-right"
+                   data-bind="value: settings.plugins.emergencystopsimplified.gcode">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="marginBot">
             <b>Input terminal of the button (switch) needs to be connected to ground or 3.3 V</b>
         </div>
         <label class="control-label">{{ _('Button is connected to:') }}</label>
