@@ -27,6 +27,10 @@ class GPIO_Gcode_Plugin(octoprint.plugin.StartupPlugin,
     def switch(self):
         return int(self._settings.get(["switch"]))
 
+    @property
+    def gcode(self):
+        return int(self._settings.get(["gcode"]))
+
     # AssetPlugin hook
     def get_assets(self):
         return dict(js=["js/emergencystopsimplified.js"], css=["css/emergencystopsimplified.css"])
@@ -40,7 +44,7 @@ class GPIO_Gcode_Plugin(octoprint.plugin.StartupPlugin,
         return dict(
             pin=-1,  # Default is -1
             switch=0
-					  gcode="M112" # Default is M112, if using TP-Link use M81 [IP Address} 
+	    gcode="M112" # Default is M112, if using TP-Link use M81 [IP Address} 
         )
 
     def on_after_startup(self):
