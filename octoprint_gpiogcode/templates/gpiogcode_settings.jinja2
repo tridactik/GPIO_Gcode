@@ -2,7 +2,7 @@
 <form class="form-horizontal marginTop">
     <div class="control-group">
         <div class="marginBot">
-            <b>Which Raspberry Pi GPIO pin your button or sensor output is attached to (-1 disables the plugin)</b>
+            <b>Which Raspberry Pi GPIO pin your button or sensor output is attached to (-1 disables the plugin)?</b>
         </div>
         <label class="control-label">{{ _('BCM pin:') }}</label>
         <div class="controls" data-toggle="tooltip">
@@ -22,13 +22,14 @@
                 <option value=1>{{ _('High/On') }}</option>
             </select>
         </div>
+    </div>
     <div class="control-group">
         <div class="marginBot">
             <b>What G-Code will run on GPIO trigger?</b>
         </div>
         <label class="control-label">{{ _('G-Code:') }}</label>
         <div class="controls" data-toggle="tooltip">
-            <input type="number" step="any" min="0" class="input-mini text-right"
+            <input type="text" style="width: 200px;" class="input-mini text-right" 
                    data-bind="value: settings.plugins.gpiogcode.gcode">
         </div>
     </div>
