@@ -29,7 +29,7 @@ class GPIO_Gcode_Plugin(octoprint.plugin.StartupPlugin,
 
     @property
     def gcode(self):
-        return int(self._settings.get(["gcode"]))
+        return str(self._settings.get(["gcode"]))
 
     # AssetPlugin hook
     def get_assets(self):
